@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PlayniteOverlay
 {
@@ -26,6 +28,16 @@ namespace PlayniteOverlay
             {
                 HasSettings = true
             };
+
+            public string fontFamily = IPlayniteSettingsAPI.FontFamilyName;
+            List<data> settingsData = new List<data>();
+            settingsData.Add(new data() { 
+                font = fontFamily;
+                gamePID = " ";
+            });
+            
+            string json = JsonSerializer.Serialize(settingsData)
+            File.WriteAllText(@"%appdata%/Playnite/ExtensionsData/fd8e7aeb-d6d7-4569-91c7-8bfa520c5934/OverlaySettings.json", json);
         }
 
         public override void OnGameInstalled(OnGameInstalledEventArgs args)
@@ -36,6 +48,10 @@ namespace PlayniteOverlay
         public override void OnGameStarted(OnGameStartedEventArgs args)
         {
             // Add code to be executed when game is started running.
+            if (args.SourceAction.IsPlayAction == true)
+            {
+                Int32 GamePID = args.StartedProcessID;
+            }
         }
 
         public override void OnGameStarting(OnGameStartingEventArgs args)
